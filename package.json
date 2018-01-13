@@ -84,14 +84,6 @@
       "node"
     ]
   },
-  "babel": {
-    "presets": [
-      "react-app"
-    ],
-    "plugins": [
-      "react-relay"
-    ]
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
