@@ -89,5 +89,6 @@
   },
   "devDependencies": {
     "babel-plugin-react-relay": "^0.10.0"
-  }
+  },
+  "homepage": "https://rvrvrv.github.io/tic-tac-turing"
 }
