@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Stage } from 'react-konva';
-import { Board, Squares } from '../styled/TicTacToe';
+import { Board, Squares } from '../components/Game';
 
 export default class TicTacToe extends Component {
 
@@ -30,6 +30,18 @@ export default class TicTacToe extends Component {
   }
 
   componentWillMount() {
+    this.resizeBoard();
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resizeBoard);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeBoard);
+  }
+
+  resizeBoard = () => {
     /* Initialize board variables */
     // Size of board is 80% of window width or height (whichever is smaller)
     let size = Math.floor(Math.min(window.innerWidth, window.innerHeight) * .8);
@@ -114,7 +126,7 @@ export default class TicTacToe extends Component {
         <Stage
           width={size}
           height={size}
-          style={{display: 'inline-block', textAlign: 'left'}}
+          style={{display: 'inline-block', textAlign: 'left', marginTop: '5vh'}}
         >
           <Board
             size={size}
