@@ -2,7 +2,7 @@ import Auth0Lock from 'auth0-lock';
 const authDomain = 'rvrvrv.auth0.com';
 const clientId = 'HcMolKSmeIq3cmA577qNRsjiQre7Is7t';
 
-export default class Auth {
+class AuthService {
   constructor() {
     this.lock = new Auth0Lock(clientId, authDomain, {
       auth: {
@@ -33,13 +33,13 @@ export default class Auth {
   // Ensure auth is current (hasn't expired)
   isCurrent = () => {
     let expStr = localStorage.getItem('rvrvrv-ttt-exp');
-    if (!expString) {
+    if (!expStr) {
       localStorage.removeItem('rvrvrv-ttt-idToken');
       return false;
     }
     // Compare current (now) and exp time
     let now = new Date();
-    let exp = new Date(parseInt(expString, 10));
+    let exp = new Date(parseInt(expStr, 10));
     // If expired, log out
     if (exp < now) {
       this.logout();
@@ -65,7 +65,9 @@ export default class Auth {
     localStorage.removeItem('rvrvrv-ttt-idToken');
     localStorage.removeItem('rvrvrv-ttt-exp');
     // Reload the page
-    location.reload();
+    window.location.reload();
   }
-
 }
+
+const auth = new AuthService();
+export default auth;
