@@ -39,8 +39,8 @@ export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownM
     let mark = gameState[i];
     let makeMove = move;
     let fill = '#044';
-    // If win occurs, highlight winning square
-    if (win && win.includes(i)) fill = '#0bb';
+    // If win occurs, highlight winning squares
+    if (win && win.includes(i)) fill = '#01bcd4';
     // Prevent illegal moves
     if (gameOver || !yourTurn || mark) makeMove = () => console.log('Not your turn');
     return (
