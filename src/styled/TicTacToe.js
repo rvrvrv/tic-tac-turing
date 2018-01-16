@@ -57,7 +57,7 @@ export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownM
         key={i}
         onClick={(e) => {
           let index = e.target.index;
-          makeMove(index, ownMark);
+          makeMove(ownMark, index);
         }}
       />
     )

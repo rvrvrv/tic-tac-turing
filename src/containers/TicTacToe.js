@@ -3,14 +3,30 @@ import { Stage } from 'react-konva';
 import { Board, Squares } from '../styled/TicTacToe';
 
 export default class TicTacToe extends Component {
-  state = {
-    rows: 3,
-    gameState: new Array(9).fill(false),
-    ownMark: 'X',
-    oppMark: 'O',
-    gameOver: false,
-    yourTurn: true,
-    winner: false
+
+  constructor(props) {
+    super(props);
+    // Array of winning lines
+    this.winLines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    this.state = {
+        rows: 3,
+        gameState: new Array(9).fill(false),
+        ownMark: 'X',
+        oppMark: 'O',
+        gameOver: false,
+        yourTurn: true,
+        winner: false
+    };
   }
 
   componentWillMount() {
@@ -33,11 +49,54 @@ export default class TicTacToe extends Component {
   }
 
   move = (marker, i) => {
-    console.log('Move made:', marker, i);
+    this.setState((prevState, props) => {
+      let { gameState, yourTurn, gameOver, winner } = prevState;
+      // Insert player's marker
+      gameState.splice(i, 1, marker)
+      // Change turn
+      yourTurn = !yourTurn;
+      // Check for winner
+      let foundWin = this.winCheck(gameState);
+      if (foundWin) winner = gameState[foundWin[0]];
+      // Check for end of game
+      if (foundWin || !gameState.includes(false)) gameOver = true;
+      // If game isn't over, make AI move with brief delay
+      if (!yourTurn && !gameOver) setTimeout(() => this.aiMove(gameState), 500);
+      // Return new state
+      return {
+        gameState,
+        yourTurn,
+        gameOver,
+        winner,
+        win: foundWin || false
+      }
+    });
   }
 
   aiMove = () => {
+    // Find all open squares
+    let openSquares = [];
+    this.state.gameState.forEach((square, i) => { if (!square) openSquares.push(i) });
+    // Random AI move
+    let randomAiMove = openSquares[this.random(0, openSquares.length)]
+    this.move(this.state.oppMark, randomAiMove);
+  }
 
+  // Generate random number within range
+  random = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  // Check for winner
+  winCheck = (gameState) => {
+    return this.winLines.find(line => {
+      let [a, b, c] = line;
+      return (gameState[a]
+        && gameState[a] === gameState[b]
+        && gameState[a] === gameState[c])
+    });
   }
 
   turingTest = () => {
