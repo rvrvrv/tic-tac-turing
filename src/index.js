@@ -7,7 +7,6 @@ import useRelay from 'react-router-relay';
 import { RelayNetworkLayer, urlMiddleware } from 'react-relay-network-layer';
 import { relayApi } from './config/endpoints';
 import auth from './utils/auth';
-import registerServiceWorker from './registerServiceWorker';
 
 const createHeaders = () => {
   let idToken = auth.getToken();
@@ -35,4 +34,3 @@ ReactDOM.render(
     routes={Routes}
   />,
   document.getElementById('root'));
-registerServiceWorker();
