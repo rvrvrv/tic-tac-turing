@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class SignInUser extends Relay.Mutation {
+export default class SigninUser extends Relay.Mutation {
   getVariables() {
     return {
       auth0: {
@@ -10,12 +10,12 @@ export default class SignInUser extends Relay.Mutation {
   }
 
   getMutation() {
-    return Relay.QL`mutation{ signInUser }`;
+    return Relay.QL`mutation{ signinUser }`;
   }
 
   getFatQuery() {
     return Relay.QL`
-      fragment on SignInPayload {
+      fragment on SigninPayload {
         viewer
       }
     `;
@@ -27,7 +27,7 @@ export default class SignInUser extends Relay.Mutation {
         type: 'REQUIRED_CHILDREN',
         children: [
           Relay.QL`
-            fragment on SignInPayload {
+            fragment on SigninPayload {
               viewer {
                 user {
                   id
