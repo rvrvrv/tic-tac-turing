@@ -1,7 +1,7 @@
 import Auth0Lock from 'auth0-lock';
 import Relay from 'react-relay';
 import CreateUser from '../mutations/CreateUser';
-import signinUser from '../mutations/SigninUser';
+import SigninUser from '../mutations/SignInUser';
 
 const authDomain = 'rvrvrv.auth0.com';
 const clientId = 'HcMolKSmeIq3cmA577qNRsjiQre7Is7t';
