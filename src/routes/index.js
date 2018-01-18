@@ -6,7 +6,7 @@ import TicTacToe from '../containers/TicTacToe';
 import Profile from '../containers/Profile';
 
 const ViewerQueries = {
-  viewer: () => Relay.QL`query { viewer } `
+  viewer: () => Relay.QL`query { viewer }`
 };
 
 const createRoutes = () => {

@@ -1,4 +1,8 @@
 import Auth0Lock from 'auth0-lock';
+import Relay from 'react-relay';
+import CreateUser from '../mutations/CreateUser';
+import SigninUser from '../mutations/SigninUser';
+
 const authDomain = 'rvrvrv.auth0.com';
 const clientId = 'HcMolKSmeIq3cmA577qNRsjiQre7Is7t';
 
@@ -16,7 +20,20 @@ class AuthService {
   }
 
   authProcess = (authResult) => {
-    console.log(authResult);
+    // Store variables from authResult
+    let { email, exp } = authResult.idTokenPayload;
+    const idToken = authResult.idToken;
+    // Attempt to sign-in user
+    this
+      .signinUser({ idToken, email, exp })
+      .then(
+      success => success,
+      // If rejected, create new user
+      rejected => {
+        this
+          .createUser({ idToken, email, exp })
+          .then()
+        });
   }
 
   showLock() {
@@ -66,6 +83,46 @@ class AuthService {
     localStorage.removeItem('rvrvrv-ttt-exp');
     // Reload the page
     window.location.reload();
+  }
+
+  // Create user after authentication
+  createUser = (authFields) => {
+    return new Promise((resolve, reject) => {
+      Relay.Store.commitUpdate(
+        new CreateUser({
+          email: authFields.email,
+          idToken: authFields.idToken
+        }), {
+          onSuccess: (response) => {
+            this.signinUser(authFields);
+            resolve(response);
+          },
+          onFailure: (response) => {
+            console.log('CreateUser error', response);
+            reject(response);
+          }
+        }
+      );
+    });
+  }
+
+  // Sign-in user after authentication
+  signinUser = (authFields) => {
+    return new Promise((resolve, reject) => {
+      Relay.Store.commitUpdate(
+        new SigninUser({
+          idToken: authFields.idToken
+        }), {
+          onSuccess: (response) => {
+            this.setToken(authFields);
+            resolve(response);
+          },
+          onFailure: (response) => {
+            reject(response);
+          }
+        }
+      );
+    });
   }
 }
 
