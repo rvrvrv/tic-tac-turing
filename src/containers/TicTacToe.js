@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import Relay from 'react-relay';
 import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
 
-export default class TicTacToe extends Component {
+class TicTacToe extends Component {
 
   constructor(props) {
     super(props);
@@ -148,3 +149,17 @@ export default class TicTacToe extends Component {
     )
   }
 };
+
+export default Relay.createContainer(
+  TicTacToe, {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          user {
+            id
+          }
+        }
+      `
+    }
+  }
+);

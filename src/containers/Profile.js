@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import Relay from 'react-relay';
 import { Container, Name, GameListHeader, GameList, GameRecord, ColumnLabels, Column } from '../styled/Profile';
 
-export default class Profile extends Component {
+class Profile extends Component {
   static defaultProps = {
     user: {
       email: 'USER_EMAIL',
@@ -79,3 +80,17 @@ export default class Profile extends Component {
     )
   }
 };
+
+export default Relay.createContainer(
+  Profile, {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          user {
+            id
+          }
+        }
+      `
+    }
+  }
+);
