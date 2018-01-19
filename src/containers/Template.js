@@ -11,7 +11,10 @@ class Template extends Component {
     return (
       <MuiThemeProvider>
         <div>
-          <Toolbar />
+          <Toolbar
+            auth={this.props.route.auth}
+            authenticated={this.props.viewer.user}
+          />
           <main>
             {this.props.children}
           </main>

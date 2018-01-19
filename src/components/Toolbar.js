@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { AppBar, Popover, Menu, MenuItem } from 'material-ui';
+import AuthButton from './AuthButton';
 
 export default class Toolbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
+      logged: false
     };
   }
 
-  handleClick = (e) => {
+  handleLeftIconButtonClick = (e) => {
     e.preventDefault();
     this.setState({
       open: true,
@@ -29,8 +31,14 @@ export default class Toolbar extends Component {
       <div>
         <AppBar
           title="Tic-Tac-Turing"
-          titleStyle={{textAlign: 'center'}}
-          onLeftIconButtonClick={this.handleClick}
+          titleStyle={{ textAlign: 'center' }}
+          iconElementRight={
+            <AuthButton
+              auth={this.props.auth}
+              authenticated={this.props.authenticated}
+            />
+          }
+          onLeftIconButtonClick={this.handleLeftIconButtonClick}
         />
         <Popover
           open={this.state.open}
