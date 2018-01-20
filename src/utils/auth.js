@@ -2,6 +2,7 @@ import Auth0Lock from 'auth0-lock';
 import Relay from 'react-relay';
 import CreateUser from '../mutations/CreateUser';
 import SigninUser from '../mutations/SigninUser';
+import { blue800 } from 'material-ui/styles/colors'
 
 const authDomain = 'rvrvrv.auth0.com';
 const clientId = 'HcMolKSmeIq3cmA577qNRsjiQre7Is7t';
@@ -11,8 +12,15 @@ class AuthService {
     this.lock = new Auth0Lock(clientId, authDomain, {
       auth: {
         params: {
-          scope: 'openid email'
-        },
+          scope: 'openid email id_token'
+        }
+      },
+      theme: {
+        logo: `${window.location.origin}/favicon.ico`,
+        primaryColor: blue800
+      },
+      languageDictionary: {
+        title: "Tic-Tac-Turing"
       }
     });
     this.showLock = this.showLock.bind(this);
@@ -20,20 +28,27 @@ class AuthService {
   }
 
   authProcess = (authResult) => {
-    // Store variables from authResult
-    let { email, exp } = authResult.idTokenPayload;
-    const idToken = authResult.idToken;
-    // Attempt to sign-in user
-    this
-      .signinUser({ idToken, email, exp })
-      .then(
-      success => success,
-      // If rejected, create new user
-      rejected => {
-        this
-          .createUser({ idToken, email, exp })
-          .then()
+    console.log('authResult:', authResult);
+    this.lock.getUserInfo(authResult.accessToken, (err, profile) => {
+      console.log('profile:', profile);
+      if (err) return console.log('Authentication error.');
+      // Store information from Auth0
+      let idToken = profile.sub;
+      let email = profile.email;
+      let exp = authResult.expiresIn;
+      // Attempt to sign-in user
+      this
+        .signinUser({ idToken, email, exp })
+        .then(
+        success => success,
+        // If rejected, create new user
+        rejected => {
+          this
+            .createUser({ idToken, email, exp })
+            .then()
+            .catch(e => console.log(e))
         });
+    });
   }
 
   showLock() {
@@ -56,7 +71,8 @@ class AuthService {
     }
     // Compare current (now) and exp time
     let now = new Date();
-    let exp = new Date(parseInt(expStr, 10));
+    let exp = new Date(now + expStr);
+    console.log(now, exp);
     // If expired, log out
     if (exp < now) {
       this.logout();
@@ -88,17 +104,18 @@ class AuthService {
   // Create user after authentication
   createUser = (authFields) => {
     return new Promise((resolve, reject) => {
+      console.log(authFields);
       Relay.Store.commitUpdate(
         new CreateUser({
           email: authFields.email,
-          idToken: authFields.idToken
+          idToken: authFields.idToken,
+          name: 'Test'
         }), {
           onSuccess: (response) => {
             this.signinUser(authFields);
             resolve(response);
           },
           onFailure: (response) => {
-            console.log('CreateUser error', response);
             reject(response);
           }
         }
