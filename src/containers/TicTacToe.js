@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Relay from 'react-relay';
+import Snackbar from 'material-ui/Snackbar';
 import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
 
@@ -20,13 +21,15 @@ class TicTacToe extends Component {
     ];
 
     this.state = {
-        rows: 3,
-        gameState: new Array(9).fill(false),
-        ownMark: 'X',
-        oppMark: 'O',
-        gameOver: false,
-        yourTurn: true,
-        winner: false
+      rows: 3,
+      gameState: new Array(9).fill(false),
+      ownMark: 'X',
+      oppMark: 'O',
+      gameOver: false,
+      yourTurn: true,
+      winner: false,
+      snackbarOpen: false,
+      snackbarMessage: 'Illegal move'
     };
   }
 
@@ -120,6 +123,14 @@ class TicTacToe extends Component {
 
   }
 
+  showSnackbar = (msg) => {
+    this.setState({ snackbarOpen: true, snackbarMessage: msg });
+  }
+
+  handleRequestClose = () => {
+    this.setState({ snackbarOpen: false });
+  }
+
   render() {
     let { unit, size, rows, coords, gameState, win, gameOver, yourTurn, ownMark } = this.state;
     return (
@@ -143,8 +154,15 @@ class TicTacToe extends Component {
             yourTurn={yourTurn}
             ownMark={ownMark}
             move={this.move}
+            showSnackbar={this.showSnackbar}
           />
         </Stage>
+        <Snackbar
+          open={this.state.snackbarOpen}
+          message={this.state.snackbarMessage}
+          autoHideDuration={2000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     )
   }

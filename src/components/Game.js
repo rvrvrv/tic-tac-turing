@@ -34,10 +34,10 @@ export const Board = ({ size, rows, unit }) => {
   );
 };
 
-export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownMark, move }) => {
+export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownMark, move, showSnackbar }) => {
 
-  const handleClickOrTap = (e, legal) => {
-    if (!legal) return console.log('Illegal move');
+  const handleClickOrTap = (e, illegal) => {
+    if (illegal) return showSnackbar(illegal);
     let index = e.target.index;
     move(ownMark, index);
   }
@@ -46,11 +46,16 @@ export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownM
   let squares = coords.map((position, i) => {
     let mark = gameState[i];
     let fill = blue800;
-    let legal = true;
+    let illegal = false;
+
     // If win occurs, highlight winning squares
     if (win && win.includes(i)) fill = green700;
+
     // Prevent illegal moves
-    if (gameOver || !yourTurn || mark) legal = false;
+    if (gameOver) illegal = 'The game has ended!';
+    else if (!yourTurn) illegal = 'It\'s not your turn!';
+    else if (mark) illegal = 'That space is already occupied.'
+
     return (
       <Text
         x={position[0]}
@@ -63,8 +68,8 @@ export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownM
         align={'center'}
         index={i}
         key={i}
-        onClick={e => handleClickOrTap(e, legal)}
-        onTap={e => handleClickOrTap(e, legal)}
+        onClick={e => handleClickOrTap(e, illegal)}
+        onTap={e => handleClickOrTap(e, illegal)}
       />
     )
   })
