@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layer, Line, Text } from 'react-konva';
-
+import { blue800, green700 } from 'material-ui/styles/colors';
 export const Board = ({ size, rows, unit }) => {
   let grid = [];
   let stroke = '#eee';
@@ -38,9 +38,9 @@ export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownM
   let squares = coords.map((position, i) => {
     let mark = gameState[i];
     let makeMove = move;
-    let fill = '#044';
+    let fill = blue800;
     // If win occurs, highlight winning squares
-    if (win && win.includes(i)) fill = '#01bcd4';
+    if (win && win.includes(i)) fill = green700;
     // Prevent illegal moves
     if (gameOver || !yourTurn || mark) makeMove = () => console.log('Not your turn');
     return (
