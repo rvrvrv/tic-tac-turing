@@ -52,7 +52,7 @@ export const Squares = ({ unit, coords, gameState, win, gameOver, yourTurn, ownM
     if (win && win.includes(i)) fill = green700;
 
     // Prevent illegal moves
-    if (gameOver) illegal = 'The game has ended!';
+    if (gameOver) illegal = 'gameOver';
     else if (!yourTurn) illegal = 'It\'s not your turn!';
     else if (mark) illegal = 'That space is already occupied.'
 

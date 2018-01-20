@@ -66,16 +66,23 @@ class TicTacToe extends Component {
 
   move = (marker, i) => {
     this.setState((prevState, props) => {
-      let { gameState, yourTurn, gameOver, winner } = prevState;
+      let { gameState, yourTurn, gameOver, winner, snackbarMessage } = prevState;
       // Insert player's marker
       gameState.splice(i, 1, marker)
       // Change turn
       yourTurn = !yourTurn;
       // Check for winner
       let foundWin = this.winCheck(gameState);
-      if (foundWin) winner = gameState[foundWin[0]];
-      // Check for end of game
-      if (foundWin || !gameState.includes(false)) gameOver = true;
+      if (foundWin) {
+        winner = gameState[foundWin[0]];
+        snackbarMessage = `${winner} wins the game!`;
+        gameOver = true;
+      }
+      // Check for tie game
+      if (!foundWin && !gameState.includes(false)) {
+        snackbarMessage = 'It\'s a tie!';
+        gameOver = true;
+      }
       // If game isn't over, make AI move with brief delay
       if (!yourTurn && !gameOver) setTimeout(() => this.aiMove(gameState), 500);
       // Return new state
@@ -84,7 +91,9 @@ class TicTacToe extends Component {
         yourTurn,
         gameOver,
         winner,
-        win: foundWin || false
+        win: foundWin || false,
+        snackbarMessage,
+        snackbarOpen: gameOver || false,
       }
     });
   }
@@ -124,7 +133,7 @@ class TicTacToe extends Component {
   }
 
   showSnackbar = (msg) => {
-    this.setState({ snackbarOpen: true, snackbarMessage: msg });
+    if (msg !== 'gameOver') this.setState({ snackbarOpen: true, snackbarMessage: msg });
   }
 
   handleRequestClose = () => {
@@ -160,8 +169,9 @@ class TicTacToe extends Component {
         <Snackbar
           open={this.state.snackbarOpen}
           message={this.state.snackbarMessage}
-          autoHideDuration={2000}
           onRequestClose={this.handleRequestClose}
+          autoHideDuration={this.state.gameOver ? 10000 : 1500}
+          contentStyle={{ fontSize: `${this.state.gameOver ? 2 : 1.2}em` }}
         />
       </div>
     )
