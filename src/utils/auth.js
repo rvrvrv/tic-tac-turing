@@ -2,7 +2,7 @@ import Auth0Lock from 'auth0-lock';
 import Relay from 'react-relay';
 import CreateUser from '../mutations/CreateUser';
 import SigninUser from '../mutations/SigninUser';
-import { blue800 } from 'material-ui/styles/colors'
+import { blue800 } from 'material-ui/styles/colors';
 
 const authDomain = 'rvrvrv.auth0.com';
 const clientId = 'HcMolKSmeIq3cmA577qNRsjiQre7Is7t';
@@ -12,7 +12,7 @@ class AuthService {
     this.lock = new Auth0Lock(clientId, authDomain, {
       auth: {
         params: {
-          scope: 'openid email id_token'
+          scope: 'openid email'
         }
       },
       theme: {
@@ -28,27 +28,20 @@ class AuthService {
   }
 
   authProcess = (authResult) => {
-    console.log('authResult:', authResult);
-    this.lock.getUserInfo(authResult.accessToken, (err, profile) => {
-      console.log('profile:', profile);
-      if (err) return console.log('Authentication error.');
-      // Store information from Auth0
-      let idToken = profile.sub;
-      let email = profile.email;
-      let exp = authResult.expiresIn;
-      // Attempt to sign-in user
-      this
-        .signinUser({ idToken, email, exp })
-        .then(
-        success => success,
-        // If rejected, create new user
-        rejected => {
-          this
-            .createUser({ idToken, email, exp })
-            .then()
-            .catch(e => console.log(e))
-        });
-    });
+    // Store information from Auth0
+    let { email, exp } = authResult.idTokenPayload;
+    const idToken = authResult.idToken;
+    // Attempt to sign-in user
+    this
+      .signinUser({ idToken, email, exp })
+      .then(
+      success => success,
+      // If rejected, create new user
+      rejected => {
+        this
+          .createUser({ idToken, email, exp })
+          .then();
+      });
   }
 
   showLock() {
@@ -104,18 +97,17 @@ class AuthService {
   // Create user after authentication
   createUser = (authFields) => {
     return new Promise((resolve, reject) => {
-      console.log(authFields);
       Relay.Store.commitUpdate(
         new CreateUser({
           email: authFields.email,
-          idToken: authFields.idToken,
-          name: 'Test'
+          idToken: authFields.idToken
         }), {
           onSuccess: (response) => {
             this.signinUser(authFields);
             resolve(response);
           },
           onFailure: (response) => {
+            console.log('CreateUser error', response)
             reject(response);
           }
         }
