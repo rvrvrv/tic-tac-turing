@@ -1,6 +1,7 @@
-import Relay from 'react-relay';
+import Relay, { Mutation } from 'react-relay'
 
-export default class CreateUser extends Relay.Mutation {
+export default class CreateUser extends Mutation {
+
   getVariables() {
     return {
       email: this.props.email,
@@ -13,7 +14,7 @@ export default class CreateUser extends Relay.Mutation {
   }
 
   getMutation() {
-    return Relay.QL`mutation{ createUser }`;
+    return Relay.QL`mutation{createUser}`
   }
 
   getFatQuery() {
