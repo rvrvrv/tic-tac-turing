@@ -12,11 +12,12 @@ class AuthService {
     this.lock = new Auth0Lock(clientId, authDomain, {
       auth: {
         params: {
-          scope: 'openid email'
+          scope: 'openid profile email',
+          responseType: 'id_token token'
         }
       },
       theme: {
-        logo: `${window.location.origin}/favicon.ico`,
+        logo: 'https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/robot-face_1f916.png',
         primaryColor: blue800
       },
       languageDictionary: {
@@ -28,6 +29,7 @@ class AuthService {
   }
 
   authProcess = (authResult) => {
+    console.log(authResult);
     // Store information from Auth0
     let { email, exp } = authResult.idTokenPayload;
     const idToken = authResult.idToken;
