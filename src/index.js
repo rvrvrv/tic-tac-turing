@@ -10,7 +10,7 @@ import auth from './utils/auth';
 
 const createHeaders = () => {
   let idToken = auth.getToken();
-  if (idToken) return { 'Authorization': `Bearer ${idToken}`};
+  if (idToken) return { 'Authorization': `Bearer ${idToken}` };
   else return {};
 };
 
@@ -20,7 +20,7 @@ Relay.injectNetworkLayer(
       url: (req) => relayApi,
     }),
     next => req => {
-      req.headers = { ...req.headers, ...createHeaders };
+      req.headers = { ...req.headers, ...createHeaders() };
       return next(req);
     },
   ], { disableBatchQuery: true })
