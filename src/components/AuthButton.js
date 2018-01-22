@@ -11,7 +11,6 @@ export default class AuthButton extends Component {
           style={this.props.style}
           label='Log Out'
           onTouchTap={this.props.auth.logout}
-          secondary
         />
       );
     } else {
@@ -20,7 +19,6 @@ export default class AuthButton extends Component {
           style={this.props.style}
           label='Log In'
           onTouchTap={this.props.auth.showLock}
-          primary
         />
       );
     }
