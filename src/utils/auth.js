@@ -12,8 +12,7 @@ class AuthService {
     this.lock = new Auth0Lock(clientId, authDomain, {
       auth: {
         params: {
-          scope: 'openid profile email',
-          responseType: 'id_token token'
+          scope: 'openid email'
         }
       },
       theme: {
