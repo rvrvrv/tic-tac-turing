@@ -4,6 +4,7 @@ import { GameContainer } from '../styled/TicTacToe';
 import Snackbar from 'material-ui/Snackbar';
 import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
+import TuringTest from '../styled/TuringTest';
 
 class TicTacToe extends Component {
 
@@ -125,12 +126,9 @@ class TicTacToe extends Component {
     });
   }
 
-  turingTest = () => {
-
-  }
-
-  recordGame = () => {
-
+  // Record the results of the game (from TuringTest component)
+  recordGame = (guess) => {
+    console.log(guess);
   }
 
   showSnackbar = (msg) => {
@@ -166,6 +164,10 @@ class TicTacToe extends Component {
             showSnackbar={this.showSnackbar}
           />
         </Stage>
+        <TuringTest
+          open={this.state.gameOver}
+          recordGame={this.recordGame}
+        />
         <Snackbar
           open={this.state.snackbarOpen}
           message={this.state.snackbarMessage}
