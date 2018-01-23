@@ -30,7 +30,7 @@ class AuthService {
   authProcess = (authResult) => {
     // Store information from Auth0
     const { email } = authResult.idTokenPayload;
-    const exp = authResult.expiresIn;
+    const exp = Date.now() + authResult.expiresIn;
     const idToken = authResult.idToken;
     // Attempt to sign-in user
     this
@@ -53,18 +53,19 @@ class AuthService {
   setToken = (authFields) => {
     let { idToken, exp } = authFields;
     localStorage.setItem('rvrvrv-ttt-idToken', idToken);
-    localStorage.setItem('rvrvrv-ttt-exp', exp * 1000);
+    localStorage.setItem('rvrvrv-ttt-exp', exp);
   }
 
   // Ensure auth is current (hasn't expired)
   isCurrent = () => {
     let exp = parseInt(localStorage.getItem('rvrvrv-ttt-exp'), 10);
+    // If no expiration time, clear localStorage
     if (!exp) {
       localStorage.removeItem('rvrvrv-ttt-idToken');
       return false;
     }
     // If expired, log out
-    if (exp <= 0) {
+    if (exp - Date.now() <= 0) {
       this.logout();
       return false;
     } else return true; // If auth is current, return true
