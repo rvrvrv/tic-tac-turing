@@ -7,6 +7,7 @@ import useRelay from 'react-router-relay';
 import { RelayNetworkLayer, urlMiddleware } from 'react-relay-network-layer';
 import { relayApi } from './config/endpoints';
 import auth from './utils/auth';
+import './style.css';
 
 const createHeaders = () => {
   let idToken = auth.getToken();
