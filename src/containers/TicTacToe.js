@@ -171,7 +171,10 @@ class TicTacToe extends Component {
           message={this.state.snackbarMessage}
           onRequestClose={this.handleRequestClose}
           autoHideDuration={this.state.gameOver ? 10000 : 1500}
-          contentStyle={{ fontSize: `${this.state.gameOver ? 2 : 1.2}em` }}
+          contentStyle={{
+            fontSize: `${this.state.gameOver ? 2 : 1.2}em`,
+            textAlign: 'center'
+          }}
         />
       </GameContainer>
     )
