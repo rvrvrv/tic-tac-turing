@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Relay from 'react-relay';
+import { GameContainer } from '../styled/TicTacToe';
 import Snackbar from 'material-ui/Snackbar';
 import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
@@ -143,11 +144,10 @@ class TicTacToe extends Component {
   render() {
     let { unit, size, rows, coords, gameState, win, gameOver, yourTurn, ownMark } = this.state;
     return (
-      <div style={{ textAlign: 'center' }}>
+      <GameContainer>
         <Stage
           width={size}
           height={size}
-          style={{display: 'inline-block', textAlign: 'left', marginTop: '5vh'}}
         >
           <Board
             size={size}
@@ -173,7 +173,7 @@ class TicTacToe extends Component {
           autoHideDuration={this.state.gameOver ? 10000 : 1500}
           contentStyle={{ fontSize: `${this.state.gameOver ? 2 : 1.2}em` }}
         />
-      </div>
+      </GameContainer>
     )
   }
 };
