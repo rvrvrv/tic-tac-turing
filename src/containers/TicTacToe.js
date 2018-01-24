@@ -194,6 +194,7 @@ class TicTacToe extends Component {
         <TuringTest
           open={this.state.gameOver}
           recordGame={this.recordGame}
+          winner={this.state.winner}
         />
         <Snackbar
           open={this.state.snackbarOpen}
