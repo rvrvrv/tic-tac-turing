@@ -3,47 +3,28 @@ import Relay from 'react-relay';
 import { Container, Name, GameListHeader, GameList, GameRecord, ColumnLabels, Column } from '../styled/Profile';
 
 class Profile extends Component {
-  static defaultProps = {
-    user: {
-      email: 'USER_EMAIL',
-      games: [
-        {
-          winner: true,
-          createdAt: '1/2/2018',
-          id: '0001'
-        },
-        {
-          winner: false,
-          createdAt: '1/5/2018',
-          id: '0002'
-        },
-        {
-          winner: true,
-          createdAt: '1/2/2018',
-          id: '0003'
-        },
-      ]
-    }
-  };
 
   get records() {
-    return this.props.user.games.map((game, i) => {
+    return this.props.viewer.user.p1Games.edges.map((edge, i) => {
+      // Rename node to game
+      let { node: game } = edge;
+      // Format results
       return (
         <GameRecord
           key={`game-${i}`}
           index={i}
         >
           <Column>
-            {(game.winner) ? 'Won!' : 'Lost'}
+            {game.winner ? 'Won!' : 'Lost'}
           </Column>
           <Column>
-            Robot
+            {game.p1Guess}
           </Column>
           <Column>
-            No
+            {game.p1GuessCorrect ? 'Yes' : 'No'}
           </Column>
           <Column>
-          {game.createdAt}
+          {new Date(game.createdAt).toLocaleDateString()}
           </Column>
         </GameRecord>
       )
@@ -54,7 +35,7 @@ class Profile extends Component {
     return (
       <Container>
         <Name>
-          {this.props.user.email}
+          {this.props.viewer.user.email}
         </Name>
         <GameList>
           <GameListHeader>
@@ -88,6 +69,20 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            email
+            p1Games (last: 10) {
+              edges {
+                node {
+                  id
+                  createdAt
+                  winner {
+                    id
+                  }
+                  p1Guess
+                  p1GuessCorrect
+                }
+              }
+            }
           }
         }
       `
