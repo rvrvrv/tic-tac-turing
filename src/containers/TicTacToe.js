@@ -5,6 +5,7 @@ import Snackbar from 'material-ui/Snackbar';
 import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
 import TuringTest from '../styled/TuringTest';
+import CreateGame from '../mutations/CreateGame';
 
 class TicTacToe extends Component {
 
@@ -128,7 +129,33 @@ class TicTacToe extends Component {
 
   // Record the results of the game (from TuringTest component)
   recordGame = (guess) => {
-    console.log(guess);
+    let { user } = this.props.viewer;
+    let { relay } = this.props;
+    let { winner, ownMark } = this.state;
+    // If authenticated, check result and record game
+    if (user) {
+      // If user won, store their name (user.id) as winnerId for Relay
+      let winnerId = (winner === ownMark) ? user.id : undefined;
+      // Determine if robot/random guess is correct
+      let guessCorrect = (guess === 'Robot') ? true : false;
+      // Mutation
+      relay.commitUpdate(
+        new CreateGame({
+          user,
+          winnerId,
+          guess,
+          guessCorrect
+        })
+      );
+    }
+    // Reset the game
+    this.setState({
+      gameState: new Array(9).fill(false),
+      gameOver: false,
+      yourTurn: true,
+      winner: false,
+      win: false
+    });
   }
 
   showSnackbar = (msg) => {
