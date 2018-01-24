@@ -88,8 +88,8 @@ class AuthService {
     // Clear localStorage
     localStorage.removeItem('rvrvrv-ttt-idToken');
     localStorage.removeItem('rvrvrv-ttt-exp');
-    // Reload the page
-    window.location.reload();
+    // Load homepage
+    window.location.assign('/');
   }
 
   // Create user after authentication
