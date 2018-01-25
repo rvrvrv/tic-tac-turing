@@ -6,7 +6,7 @@ import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
 import TuringTest from '../styled/TuringTest';
 import CreateGame from '../mutations/CreateGame';
-import AI from 'tic-tac-toe-ai-engine';
+import AI from '../utils/ttt';
 let smartAI;
 
 class TicTacToe extends Component {
@@ -110,14 +110,12 @@ class TicTacToe extends Component {
   aiMove = () => {
     // If smartAI, use AI to make the best move
     if (smartAI) {
-      // Format board for AI engine
-      let board = [...this.state.gameState].map(square => !square ? '' : square);
       // Get next move (represented by entire board)
-      let nextBoard = AI.computeMove(board).nextBestGameState;
+      let nextBoard = AI(this.state.gameState).nextBestGameState;
       // Compare board and nextBoard to determine the difference
       let bestSquare;
       for (let i = 0; i < 9; i++) {
-        if (board[i] !== nextBoard[i]) bestSquare = i;
+        if (this.state.gameState[i] !== nextBoard[i]) bestSquare = i;
       }
       // Execute AI move
       this.move(this.state.oppMark, bestSquare);
