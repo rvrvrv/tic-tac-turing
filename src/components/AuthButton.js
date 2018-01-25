@@ -14,6 +14,7 @@ export default class AuthButton extends Component {
           backgroundColor={grey800}
           hoverColor={grey900}
           label="Log Out"
+          className="btn-auth"
           onTouchTap={this.props.auth.logout}
         />
       );
@@ -23,6 +24,7 @@ export default class AuthButton extends Component {
           style={this.props.style}
           backgroundColor={this.props.blink ? green200 : null}
           label="Log In"
+          className="btn-auth"
           icon={<LockIcon />}
           onTouchTap={this.props.auth.showLock}
         />

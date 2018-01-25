@@ -1,4 +1,14 @@
 body {
   margin: 0;
-  overflow-y: hidden;
+  overflow: hidden;
+}
+
+@media (max-width: 380px) {
+  .title h1 {
+    font-size: 18px !important;
+  }
+  .btn-auth {
+    margin-right: -1em !important;
+    transform: scale(.7) !important;
+  }
 }

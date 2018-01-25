@@ -41,9 +41,11 @@ export default class Toolbar extends Component {
         <AppBar
           title="Tic-Tac-Turing"
           titleStyle={{
-            paddingLeft: '1.5em',
+            paddingLeft: '1.7em',
             textAlign: 'center'
           }}
+          className="title"
+          zDepth={2}
           iconElementRight={
             <AuthButton
               auth={this.props.auth}
