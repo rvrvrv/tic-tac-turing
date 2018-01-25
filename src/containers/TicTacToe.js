@@ -6,6 +6,8 @@ import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
 import TuringTest from '../styled/TuringTest';
 import CreateGame from '../mutations/CreateGame';
+import AI from 'tic-tac-toe-ai-engine';
+let smartAI;
 
 class TicTacToe extends Component {
 
@@ -38,6 +40,7 @@ class TicTacToe extends Component {
 
   componentWillMount() {
     this.resizeBoard();
+    this.resetAI();
   }
 
   componentDidMount() {
@@ -66,6 +69,9 @@ class TicTacToe extends Component {
     // Set state based on new variables
     this.setState({ size, rows, unit, coords });
   }
+
+  // Reset smartAI variable. 1 = smart (robot), 0 = dumb (random)
+  resetAI = () => smartAI = Math.round(Math.random());
 
   move = (marker, i) => {
     this.setState((prevState, props) => {
@@ -102,19 +108,29 @@ class TicTacToe extends Component {
   }
 
   aiMove = () => {
-    // Find all open squares
-    let openSquares = [];
-    this.state.gameState.forEach((square, i) => { if (!square) openSquares.push(i) });
-    // Random AI move
-    let randomAiMove = openSquares[this.random(0, openSquares.length)]
-    this.move(this.state.oppMark, randomAiMove);
-  }
-
-  // Generate random number within range
-  random = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
+    // If smartAI, use AI to make the best move
+    if (smartAI) {
+      // Format board for AI engine
+      let board = [...this.state.gameState].map(square => !square ? '' : square);
+      // Get next move (represented by entire board)
+      let nextBoard = AI.computeMove(board).nextBestGameState;
+      // Compare board and nextBoard to determine the difference
+      let bestSquare;
+      for (let i = 0; i < 9; i++) {
+        if (board[i] !== nextBoard[i]) bestSquare = i;
+      }
+      // Execute AI move
+      this.move(this.state.oppMark, bestSquare);
+    } else {
+      // Otherwise, make a random move
+      let openSquares = [];
+      // Find all open squares
+      this.state.gameState.forEach((square, i) => { if (!square) openSquares.push(i) });
+      // Choose an open square at random
+      let randomSquare = openSquares[Math.floor(Math.random() * openSquares.length)]
+      // Execute random move
+      this.move(this.state.oppMark, randomSquare);
+    }
   }
 
   // Check for winner
@@ -127,6 +143,9 @@ class TicTacToe extends Component {
     });
   }
 
+  // Analyze the user's guess and return the result (true = correct, false = wrong)
+  analyzeGuess = (guess) => ((smartAI && guess === 'Robot') || (!smartAI && guess === 'Random'));
+
   // Record the results of the game (from TuringTest component)
   recordGame = (guess) => {
     let { user } = this.props.viewer;
@@ -137,7 +156,7 @@ class TicTacToe extends Component {
       // If user won, store their name (user.id) as winnerId for Relay
       let winnerId = (winner === ownMark) ? user.id : undefined;
       // Determine if robot/random guess is correct
-      let guessCorrect = (guess === 'Robot') ? true : false;
+      let guessCorrect = this.analyzeGuess(guess);
       // Mutation
       relay.commitUpdate(
         new CreateGame({
@@ -156,6 +175,7 @@ class TicTacToe extends Component {
       winner: false,
       win: false
     });
+    this.resetAI();
   }
 
   showSnackbar = (msg) => {
