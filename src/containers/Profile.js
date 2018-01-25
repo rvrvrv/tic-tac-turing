@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Relay from 'react-relay';
-import { Container, Name, GameListHeader, GameList, GameRecord, ColumnLabels, Column } from '../styled/Profile';
+import Paper from 'material-ui/Paper';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 class Profile extends Component {
 
@@ -10,54 +11,53 @@ class Profile extends Component {
       let { node: game } = edge;
       // Format results
       return (
-        <GameRecord
-          key={`game-${i}`}
-          index={i}
-        >
-          <Column>
+        <TableRow key={`game-${i}`}>
+          <TableRowColumn>
             {game.winner ? 'Won!' : 'Lost'}
-          </Column>
-          <Column>
+          </TableRowColumn>
+          <TableRowColumn>
             {game.p1Guess}
-          </Column>
-          <Column>
+          </TableRowColumn>
+          <TableRowColumn>
             {game.p1GuessCorrect ? 'Yes' : 'No'}
-          </Column>
-          <Column>
+          </TableRowColumn>
+          <TableRowColumn>
           {new Date(game.createdAt).toLocaleDateString()}
-          </Column>
-        </GameRecord>
+          </TableRowColumn>
+        </TableRow>
       )
     });
   }
 
   render() {
     return (
-      <Container>
-        <Name>
-          {this.props.viewer.user.email}
-        </Name>
-        <GameList>
-          <GameListHeader>
-            My Games
-          </GameListHeader>
-        <ColumnLabels>
-          <Column>
-            Result
-          </Column>
-          <Column>
-            Guess
-          </Column>
-          <Column>
-            Correct?
-          </Column>
-          <Column>
-            Date
-          </Column>
-          </ColumnLabels>
-          {this.records}
-        </GameList>
-      </Container>
+      <div style={{ textAlign: 'center' }}>
+        <h3>{this.props.viewer.user.email}</h3>
+        <Paper
+          style={{
+            width: '95vw',
+            margin: '0 auto'
+          }}
+          zDepth={3}
+        >
+          <Table style={{ maxHeight: '70vh' }}>
+            <TableHeader displaySelectAll={false}>
+              <TableRow>
+                <TableHeaderColumn>Result</TableHeaderColumn>
+                <TableHeaderColumn>Guess</TableHeaderColumn>
+                <TableHeaderColumn>Correct?</TableHeaderColumn>
+                <TableHeaderColumn>Date</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}
+              stripedRows={true}
+            >
+              {this.records}
+            </TableBody>
+          </Table>
+          </Paper>
+      </div>
     )
   }
 };
