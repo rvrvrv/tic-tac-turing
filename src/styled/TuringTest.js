@@ -31,15 +31,14 @@ class TuringTest extends Component {
 
     return (
       <Dialog
-        title="Robot or Random?"
+        title={this.props.winner
+          ? `${this.props.winner} is the winner!`
+          : 'It\'s a tie!'}
+        style={{textAlign: 'center'}}
         actions={actions}
         modal={true}
         open={this.state.open}
       >
-        {this.props.winner
-          ? `${this.props.winner} won!`
-          : 'It\'s a tie!'}
-        <br /><br />
         Was your opponent an intelligent robot or completely random?
       </Dialog>
     );
