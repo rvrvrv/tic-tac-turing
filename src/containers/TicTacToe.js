@@ -4,7 +4,7 @@ import { GameContainer } from '../styled/TicTacToe';
 import Snackbar from 'material-ui/Snackbar';
 import { Stage } from 'react-konva';
 import { Board, Squares } from '../components/Game';
-import TuringTest from '../styled/TuringTest';
+import TuringTest from '../components/TuringTest';
 import CreateGame from '../mutations/CreateGame';
 import AI from '../utils/ttt';
 let smartAI;
