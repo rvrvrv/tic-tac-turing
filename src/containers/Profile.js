@@ -9,11 +9,16 @@ class Profile extends Component {
     return this.props.viewer.user.p1Games.edges.map((edge, i) => {
       // Rename node to game
       let { node: game } = edge;
+      // Determine result of game based on game.winner
+      let gameResult = 'Tie';
+      // 'cjcxjqcw108ae016572wbct5b' is placeholder AI account
+      if (game.winner === 'cjcxjqcw108ae016572wbct5b') gameResult = 'Lost';
+      else if (game.winner) gameResult = 'Won!';
       // Format results
       return (
         <TableRow key={`game-${i}`}>
           <TableRowColumn>
-            {game.winner ? 'Won!' : 'Lost'}
+            {gameResult}
           </TableRowColumn>
           <TableRowColumn>
             {game.p1Guess}

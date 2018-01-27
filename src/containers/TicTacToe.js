@@ -148,11 +148,15 @@ class TicTacToe extends Component {
   recordGame = (guess) => {
     let { user } = this.props.viewer;
     let { relay } = this.props;
-    let { winner, ownMark } = this.state;
+    let { winner, ownMark, oppMark } = this.state;
     // If authenticated, check result and record game
     if (user) {
-      // If user won, store their name (user.id) as winnerId for Relay
-      let winnerId = (winner === ownMark) ? user.id : undefined;
+      // Default value is undefined (in case of tie)
+      let winnerId = undefined;
+      // If user won, record user.id as winnerId for Relay
+      if (winner === ownMark) winnerId = user.id;
+      // If opponent won, record placeholder AI account as winnerId
+      else if (winner === oppMark) winnerId = 'cjcxjqcw108ae016572wbct5b';
       // Determine if robot/random guess is correct
       let guessCorrect = this.analyzeGuess(guess);
       // Mutation
