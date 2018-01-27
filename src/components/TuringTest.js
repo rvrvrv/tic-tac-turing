@@ -8,7 +8,7 @@ class TuringTest extends Component {
 
   // Show dialog once at end of game
   componentWillReceiveProps(nextProps) {
-    if (nextProps.open) setTimeout(() => this.setState({ open: true }), 500);
+    if (nextProps.open && !this.state.open) setTimeout(() => this.setState({ open: true }), 500);
   }
 
   // Record user's answer and close the dialog
